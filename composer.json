@@ -1,0 +1,23 @@
+{
+  "name": "zongphp/response",
+  "description": "服务器状态码与数据响应组件",
+  "type": "project",
+  "keywords": [
+    "json",
+    "ajax"
+  ],
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.4.0",
+    "zongphp/xml": "~1.0"
+  },
+  "autoload": {
+    "files": [
+      "src/helper.php"
+    ],
+    "psr-4": {
+      "zongphp\\response\\": "src"
+    }
+  }
+}

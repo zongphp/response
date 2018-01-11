@@ -1,4 +1,6 @@
 <?php namespace zongphp\response;
+
+//请求处理
 use zongphp\response\build\Base;
 
 class Response {

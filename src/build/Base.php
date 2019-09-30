@@ -100,4 +100,65 @@ class Base {
 		}
 		die( $res );
 	}
+	
+	/**
+     * 创建Response对象
+     * @access public
+     * @param  mixed  $data    输出数据
+     * @param  string $type    输出类型
+     * @param  int    $code
+     * @param  array  $header
+     * @param  array  $options 输出参数
+     * @return Response
+     */
+    public static function create($data = '', $type = 'JSON', $code = 200, array $header = [], $options = [])
+    {
+		if (!headers_sent() && !empty($header)) {
+            // 发送状态码
+            http_response_code($code);
+            // 发送头部信息
+            foreach ($header as $name => $val) {		
+                header($name . (!is_null($val) ? ':' . $val : ''));
+            }
+        }
+		
+		switch ( strtoupper( $type ) ) {
+			case "TEXT" :
+				$res = $data;
+				break;
+			case "HTML" :
+				header( 'Content-Type: application/x-javascript;charset=utf-8' );
+				$res = $data;
+				break;
+			case "XML" :
+				header( 'Content-Type: application/xml;charset=utf-8' );
+				$res = ( new Xml() )->toSimpleXml( $data );
+				break;
+			case 'JSONP':		
+				$options = [
+					'var_jsonp_handler'     => 'callback',
+					'default_jsonp_handler' => 'jsonpReturn',
+					'json_encode_param'     => JSON_UNESCAPED_UNICODE,
+				];
+				$var_jsonp_handler = input($options['var_jsonp_handler'], "");
+				$handler = !empty($var_jsonp_handler) ? $var_jsonp_handler : $options['default_jsonp_handler'];
+
+				$data = json_encode($data, $options['json_encode_param']);
+				$res = $handler . '(' . $data . ');';
+				
+				break;
+			case 'JSON':
+				$options = [
+					'json_encode_param'     => JSON_UNESCAPED_UNICODE
+				];
+				header( 'Content-Type: application/json;charset=utf-8' );
+				$res = json_encode( $data, $options['json_encode_param'] );
+				break;
+			default :
+				header( 'Content-Type: application/json;charset=utf-8' );
+				$res = json_encode( $data, JSON_UNESCAPED_UNICODE );
+		}
+		
+		die( $res );
+    }
 }

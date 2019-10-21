@@ -234,7 +234,7 @@ class Base {
      */
     public static function create($data = '', $type = '', $code = 200, array $header = [], $options = [])
     {
-        $class = false !== strpos($type, '\\') ? $type : '\\zongphp\\response\\Build\\driver\\' . ucfirst(strtolower($type));
+        $class = false !== strpos($type, '\\') ? $type : '\\zongphp\\response\\build\\driver\\' . ucfirst(strtolower($type));
 
         if (class_exists($class)) {
             return new $class($data, $code, $header, $options);

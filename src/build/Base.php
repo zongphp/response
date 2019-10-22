@@ -1,6 +1,7 @@
 <?php
 namespace zongphp\response\build;
 use zongphp\xml\Xml;
+use zongphp\response\build\driver\Redirect as RedirectResponse;
 
 class Base {
 
@@ -270,6 +271,8 @@ class Base {
             // 提高页面响应
             fastcgi_finish_request();
         }
+		
+		
 
     }
 
@@ -308,6 +311,19 @@ class Base {
 
         return $this;
 	}
+	
+	 /**
+     * 是否允许请求缓存
+     * @access public
+     * @param  bool $cache 允许请求缓存
+     * @return $this
+     */
+    public function allowCache($cache)
+    {
+        $this->allowCache = $cache;
+
+        return $this;
+    }
 
 	/**
      * 设置响应头
@@ -360,7 +376,71 @@ class Base {
 
         return $this;
     }
+	
+	/**
+     * LastModified
+     * @access public
+     * @param  string $time
+     * @return $this
+     */
+    public function lastModified($time)
+    {
+        $this->header['Last-Modified'] = $time;
 
+        return $this;
+    }
+
+    /**
+     * Expires
+     * @access public
+     * @param  string $time
+     * @return $this
+     */
+    public function expires($time)
+    {
+        $this->header['Expires'] = $time;
+
+        return $this;
+    }
+
+    /**
+     * ETag
+     * @access public
+     * @param  string $eTag
+     * @return $this
+     */
+    public function eTag($eTag)
+    {
+        $this->header['ETag'] = $eTag;
+
+        return $this;
+    }
+
+	    /**
+     * 页面缓存控制
+     * @access public
+     * @param  string $cache 缓存设置
+     * @return $this
+     */
+    public function cacheControl($cache)
+    {
+        $this->header['Cache-control'] = $cache;
+
+        return $this;
+    }
+
+    /**
+     * 设置页面不做任何缓存
+     * @access public
+     * @return $this
+     */
+    public function noCache()
+    {
+        $this->header['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0';
+        $this->header['Pragma']        = 'no-cache';
+
+        return $this;
+    }
 	
 	/**
      * 页面输出类型
